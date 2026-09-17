@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f766e">
+<title>健診結果アセスメント｜薬剤師向け</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;background:#f5f7f7;color:#17201f}
+header{background:#0f766e;color:white;padding:20px 16px}h1{font-size:22px;margin:0 0 5px}header p{margin:0;font-size:13px;opacity:.9}
+main{max-width:760px;margin:auto;padding:14px}.card{background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px #0000000d}
+h2{font-size:17px;margin:0 0 12px;border-left:4px solid #0f766e;padding-left:9px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:13px;font-weight:600}.field{margin-bottom:3px}input,select{width:100%;margin-top:5px;padding:11px;border:1px solid #ccd6d4;border-radius:9px;font-size:16px;background:white}
+.ref{font-size:11px;color:#667370;font-weight:400}.status{font-size:11px;margin-top:3px;min-height:15px}.ok{color:#18794e}.warn{color:#a15c00}.bad{color:#b42318}
+button{width:100%;border:0;border-radius:10px;background:#0f766e;color:white;padding:14px;font-size:16px;font-weight:700}
+.result{border-left:4px solid #0f766e;padding:11px 12px;margin:9px 0;background:#f1f8f7;border-radius:7px}.result strong{display:block;margin-bottom:4px}
+.small{font-size:11px;color:#667370;line-height:1.5}.tag{display:inline-block;background:#e6f4f1;color:#0f766e;border-radius:20px;padding:4px 8px;font-size:11px;margin:2px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+</style>
+
+<style>
+:root{
+  --bg:#f3f6fa;--card:#fff;--ink:#172033;--muted:#718096;
+  --primary:#1f5eff;--primary2:#1647c7;--line:#e6ebf2;
+  --ok:#16845b;--warn:#b77900;--bad:#d43b4a;--shadow:0 10px 30px rgba(28,45,75,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0!important;background:var(--bg)!important;color:var(--ink)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif!important;
+  line-height:1.65!important;
+}
+.container,.wrap,.app{max-width:760px!important;margin:0 auto!important;padding:0 16px 100px!important}
+header,.hero{
+  background:linear-gradient(135deg,#183b8f,#2875ff)!important;color:#fff!important;
+  margin:0 -16px 18px!important;padding:28px 20px 24px!important;
+  border-radius:0 0 28px 28px!important;box-shadow:0 8px 28px rgba(24,59,143,.22)!important;
+}
+h1{font-size:25px!important;letter-spacing:.02em;margin:0 0 5px!important}
+header p,.hero p{margin:0!important;color:rgba(255,255,255,.82)!important;font-size:13px!important}
+section,.card,.panel,.result-card{
+  background:var(--card)!important;border:1px solid var(--line)!important;
+  border-radius:18px!important;box-shadow:var(--shadow)!important;
+  padding:18px!important;margin:0 0 14px!important;
+}
+section h2,.card h2,.panel h2{
+  font-size:17px!important;margin:0 0 14px!important;color:#18263d!important;
+  display:flex;align-items:center;gap:8px;
+}
+label{font-size:12px!important;font-weight:700!important;color:#667085!important}
+input,select,textarea{
+  width:100%!important;min-height:46px!important;border:1px solid #d9e0ea!important;
+  border-radius:12px!important;background:#fbfcfe!important;padding:10px 12px!important;
+  font-size:16px!important;color:var(--ink)!important;outline:none!important;
+  transition:.18s!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--primary)!important;box-shadow:0 0 0 3px rgba(31,94,255,.12)!important;background:#fff!important;
+}
+button{
+  border:0!important;border-radius:13px!important;padding:12px 16px!important;
+  font-weight:800!important;font-size:14px!important;cursor:pointer!important;
+  box-shadow:0 5px 14px rgba(31,94,255,.16)!important;
+}
+button[type="submit"],.primary,.btn-primary{
+  background:linear-gradient(135deg,var(--primary),#4782ff)!important;color:#fff!important;
+}
+button:not([type="submit"]):not(.primary):not(.btn-primary){
+  background:#edf3ff!important;color:#2353b9!important;
+}
+table{width:100%!important;border-collapse:separate!important;border-spacing:0!important;overflow:hidden;border:1px solid var(--line);border-radius:13px}
+th{background:#f6f8fb!important;color:#68758a!important;font-size:11px!important}
+th,td{padding:9px 8px!important;border-bottom:1px solid var(--line)!important;font-size:12px!important}
+tr:last-child td{border-bottom:0!important}
+.badge,.priority,.status{
+  display:inline-flex!important;align-items:center!important;border-radius:999px!important;
+  padding:4px 9px!important;font-size:11px!important;font-weight:800!important;
+}
+.badge.ok,.status.ok{background:#e7f7ef!important;color:var(--ok)!important}
+.badge.warn,.status.warn{background:#fff4d8!important;color:var(--warn)!important}
+.badge.bad,.status.bad{background:#ffeaed!important;color:var(--bad)!important}
+.priority{background:#eef3ff!important;color:#2456c5!important}
+hr{border:0;border-top:1px solid var(--line)!important;margin:16px 0!important}
+.small,.note,.hint{color:var(--muted)!important;font-size:11px!important}
+input[type=file]{padding:9px!important;background:#f7f9fc!important}
+.sticky-actions{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.92);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);display:flex;gap:8px;justify-content:center;
+}
+.sticky-actions button{max-width:760px;flex:1}
+@media(min-width:700px){header,.hero{margin-left:0!important;margin-right:0!important;border-radius:22px!important}}
+</style>
+
+
+<style>
+:root{
+ --bg:#f4f7fb;--surface:#fff;--ink:#14213d;--muted:#718096;
+ --blue:#2463eb;--blue2:#1747b8;--line:#e7ecf3;
+ --green:#16845b;--yellow:#b77900;--red:#d43b4a;
+}
+body{background:var(--bg)!important}
+.app-shell{max-width:760px;margin:auto}
+.top-app{
+ background:linear-gradient(135deg,#12347e,#347bff);color:#fff;
+ padding:22px 18px 20px;border-radius:0 0 26px 26px;
+ box-shadow:0 10px 28px rgba(24,59,143,.2);margin:0 -16px 16px;
+}
+.top-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.app-kicker{font-size:11px;letter-spacing:.12em;opacity:.78;font-weight:800}
+.app-title{font-size:24px;font-weight:900;letter-spacing:.01em;margin-top:3px}
+.app-sub{font-size:12px;opacity:.82;margin-top:3px}
+.stepbar{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:18px}
+.step{height:5px;border-radius:99px;background:rgba(255,255,255,.25)}
+.step.active{background:#fff}
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.quick-card{
+ background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;
+ box-shadow:0 8px 22px rgba(28,45,75,.06);cursor:pointer;
+}
+.quick-icon{font-size:21px}.quick-title{font-size:13px;font-weight:900;margin-top:4px}
+.quick-desc{font-size:10px;color:var(--muted);margin-top:2px}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 9px}
+.section-title h2{font-size:14px;margin:0!important}
+.section-title span{font-size:10px;color:var(--muted)}
+details.app-section{
+ background:#fff;border:1px solid var(--line);border-radius:17px;margin-bottom:10px;
+ box-shadow:0 7px 20px rgba(28,45,75,.05);overflow:hidden;
+}
+details.app-section summary{
+ list-style:none;padding:15px;cursor:pointer;font-weight:900;font-size:14px;
+ display:flex;align-items:center;justify-content:space-between;
+}
+details.app-section summary::-webkit-details-marker{display:none}
+details.app-section summary:after{content:"＋";color:var(--blue);font-size:18px}
+details.app-section[open] summary:after{content:"−"}
+.section-body{padding:0 15px 15px}
+.result-hero{
+ background:linear-gradient(135deg,#172f68,#2463eb);color:#fff;border-radius:18px;
+ padding:17px;margin-bottom:12px;box-shadow:0 10px 25px rgba(36,99,235,.18)
+}
+.result-hero .rh-label{font-size:11px;opacity:.8}
+.result-hero .rh-title{font-size:20px;font-weight:900;margin-top:2px}
+.result-hero .rh-desc{font-size:11px;opacity:.86;margin-top:3px}
+.fab{
+ position:fixed;right:18px;bottom:78px;z-index:60;width:54px;height:54px;
+ border-radius:50%;background:var(--blue);color:#fff;font-size:22px;
+ box-shadow:0 10px 25px rgba(36,99,235,.32);display:flex;align-items:center;justify-content:center;
+}
+@media(min-width:700px){
+ .top-app{margin-left:0;margin-right:0;border-radius:22px}
+}
+</style>
+
+<style>
+.advice-wrap{margin:16px 0}.advice-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:5px}
+.advice-tab{flex:0 0 auto;background:#eef3ff;color:#2456c5;border:0;border-radius:999px;padding:9px 13px;font-size:12px;font-weight:800}
+.advice-tab.active{background:#2463eb;color:#fff}.advice-panel{background:#fff;border:1px solid #e5ebf3;border-radius:18px;padding:16px;box-shadow:0 8px 22px rgba(28,45,75,.06)}
+.advice-head{font-size:17px;font-weight:900}.advice-sub{font-size:11px;color:#718096;margin:4px 0 12px}
+.advice-item{padding:12px 0;border-top:1px solid #edf0f5}.advice-item:first-child{border-top:0}
+.advice-item b{font-size:13px}.advice-item p{font-size:12px;margin:5px 0 0;color:#39465c}
+.advice-callout{background:#f5f8ff;border-radius:13px;padding:11px;font-size:11px;color:#40516e;margin-top:12px}
+</style>
+<style>
+.personal-advice{margin:16px 0}
+.pa-box{background:#fff;border:1px solid #e5ebf3;border-radius:18px;padding:16px;box-shadow:0 8px 22px rgba(28,45,75,.06);margin-bottom:12px}
+.pa-title{font-size:17px;font-weight:900}.pa-sub{font-size:11px;color:#718096;margin:4px 0 12px}
+.pa-chip{display:inline-block;background:#eef3ff;color:#2456c5;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;margin:3px}
+.pa-item{border-top:1px solid #edf0f5;padding:11px 0}.pa-item:first-child{border-top:0}
+.pa-item b{font-size:13px}.pa-item p{font-size:12px;color:#39465c;margin:4px 0 0}
+.pa-warn{background:#fff7df;border:1px solid #f0d88a;border-radius:13px;padding:11px;font-size:11px;color:#765400}
+.pa-red{background:#fff0f2;border:1px solid #f2c4ca;border-radius:13px;padding:11px;font-size:11px;color:#8e2734}
+.pa-green{background:#edf9f3;border:1px solid #ccebdc;border-radius:13px;padding:11px;font-size:11px;color:#176b4c}
+</style>
+
+
+<style>
+:root{--navy:#071321;--blue:#2f80ff;--cyan:#61dcff;--bg:#eef3f8;--text:#101828;--muted:#667085;--line:#e1e7ef;--shadow:0 16px 42px rgba(8,29,58,.09)}
+body{background:linear-gradient(180deg,#edf3f8,#f8fafc 45%,#edf2f7)!important;color:var(--text)!important}
+.top-app{background:radial-gradient(circle at 90% 0,rgba(97,220,255,.32),transparent 34%),linear-gradient(135deg,#06111e,#102d4e 56%,#155dc8)!important;border-radius:0 0 32px 32px!important;padding:27px 20px 23px!important;box-shadow:0 18px 42px rgba(5,29,68,.24)!important;position:relative;overflow:hidden}
+.top-app:after{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(255,255,255,.11);border-radius:50%;right:-80px;top:-80px}
+.app-kicker{font-size:10px!important;letter-spacing:.2em!important;color:#91e9ff!important}.app-title{font-size:26px!important;letter-spacing:-.035em!important}.app-sub{font-size:11px!important}
+.stepbar{gap:5px!important}.step{height:4px!important}.step.active{background:linear-gradient(90deg,#fff,#7de8ff)!important}
+.quick-grid{gap:12px!important}.quick-card{border-radius:19px!important;box-shadow:var(--shadow)!important;border-color:#e0e7f0!important;padding:15px!important}
+.quick-title{font-size:13px!important;letter-spacing:-.02em}.quick-desc{font-size:10px!important}
+.section-title h2{font-size:15px!important;letter-spacing:-.02em}
+section,.card,.panel,.result-card,.pa-box,.advice-panel{border:1px solid rgba(219,227,237,.95)!important;border-radius:20px!important;box-shadow:var(--shadow)!important;background:rgba(255,255,255,.94)!important}
+input,select,textarea{border-radius:13px!important;background:#f8fafc!important;border-color:#dbe3ed!important}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)!important;box-shadow:0 0 0 4px rgba(47,128,255,.1)!important}
+button.primary,button[type=submit]{background:linear-gradient(135deg,#1765ee,#3295ff)!important}
+.advice-tab.active{background:linear-gradient(135deg,#123e8f,#2f80ff)!important}.pa-chip{background:#edf5ff!important;color:#1f5fc4!important;border:1px solid #d7e7ff}
+.fab{background:linear-gradient(145deg,#1765ee,#3b9cff)!important}.sticky-actions{background:rgba(248,250,253,.84)!important;backdrop-filter:blur(18px)!important}
+</style>
+
+<style id="v15-linked-advice-style">
+.result-head{display:flex;justify-content:space-between;align-items:center;margin:18px 0 12px}
+.eyebrow{font-size:10px;letter-spacing:.18em;opacity:.65}
+.result-head h2{margin:3px 0 0}
+.result-count{padding:7px 11px;border-radius:999px;background:rgba(0,180,255,.12);font-weight:700}
+.focus-box{margin:14px 0;padding:16px;border-radius:18px;background:linear-gradient(135deg,rgba(0,180,255,.12),rgba(90,100,255,.08));border:1px solid rgba(0,180,255,.22)}
+.focus-title{font-weight:800;margin-bottom:7px}.focus-text{font-weight:700;line-height:1.65}.focus-note{font-size:12px;opacity:.72;margin-top:7px;line-height:1.6}
+.finding-card{margin:13px 0;padding:15px;border-radius:20px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.finding-top{display:flex;gap:11px;align-items:flex-start}.rank{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:rgba(0,180,255,.14);font-weight:800;flex:none}
+.finding-main{flex:1}.finding-title{font-weight:800;font-size:15px}.finding-detail{font-size:12px;opacity:.72;margin-top:3px}.priority{font-size:11px;font-weight:800;padding:6px 8px;border-radius:999px;white-space:nowrap}.p-high{background:rgba(255,80,80,.15)}.p-mid{background:rgba(255,180,0,.15)}.p-low{background:rgba(0,180,255,.12)}
+.linked-advice{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.advice-col{padding:12px;border-radius:15px;background:rgba(0,0,0,.10)}.advice-label{font-size:12px;font-weight:800;margin-bottom:6px}.advice-col ul{margin:0;padding-left:17px}.advice-col li{font-size:12px;line-height:1.55;margin:4px 0}
+.safety-note{margin:15px 0;padding:13px;border-radius:15px;background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.18);font-size:12px;line-height:1.6}.bmi-note{font-size:12px;opacity:.7;margin:10px 2px}.result-ok{padding:16px;border-radius:18px;background:rgba(0,200,130,.08);border:1px solid rgba(0,200,130,.18)}.result-ok p{font-size:12px;opacity:.75}
+@media(max-width:700px){.linked-advice{grid-template-columns:1fr}.finding-top{flex-wrap:wrap}.finding-main{min-width:55%}}
+</style>
+
+</head>
+<body>
+
+<div class="top-app" id="appTop">
+  <div class="top-row">
+    <div>
+      <div class="app-kicker">PHARMACIST SUPPORT</div>
+      <div class="app-title">健診結果アセスメント</div>
+      <div class="app-sub">健診値を整理して、確認ポイントをすばやく把握</div>
+    </div>
+    <div style="font-size:28px">🩺</div>
+  </div>
+  <div class="stepbar" aria-label="workflow">
+    <div class="step active"></div><div class="step active"></div><div class="step"></div><div class="step"></div>
+  </div>
+</div>
+
+<div class="quick-grid">
+  <div class="quick-card" id="quickOcr"><div class="quick-icon">📷</div><div class="quick-title">健診票を読み取る</div><div class="quick-desc">写真 → OCR → 確認</div></div>
+  <div class="quick-card" id="quickAnalyze"><div class="quick-icon">⚡</div><div class="quick-title">結果を解析する</div><div class="quick-desc">優先度と確認点を表示</div></div>
+</div>
+
+<header><h1>健診結果アセスメント</h1><p>薬局薬剤師向け・健診結果の整理支援ツール</p></header>
+<main>
+<section class="card">
+<h2>基本情報</h2>
+<div class="grid">
+<div class="field"><label>年齢<input id="age" type="number" min="0"></label></div>
+<div class="field"><label>性別<select id="sex"><option value="m">男性</option><option value="f">女性</option></select></label></div>
+<div class="field"><label>身長 cm<input id="height" type="number" step=".1"></label></div>
+<div class="field"><label>体重 kg<input id="weight" type="number" step=".1"></label></div>
+<div class="field"><label>腹囲 cm<input id="waist" type="number" step=".1"><div id="s-waist" class="status"></div></label></div>
+</div></section>
+
+<section class="card"><h2>血圧</h2><div class="grid">
+<div class="field"><label>収縮期 mmHg <span class="ref">基準目安 ≤129</span><input id="sbp" type="number"><div id="s-sbp" class="status"></div></label></div>
+<div class="field"><label>拡張期 mmHg <span class="ref">基準目安 ≤84</span><input id="dbp" type="number"><div id="s-dbp" class="status"></div></label></div>
+</div></section>
+
+<section class="card"><h2>糖代謝</h2><div class="grid">
+<div class="field"><label>空腹時血糖 mg/dL <span class="ref">70–99</span><input id="glu" type="number"><div id="s-glu" class="status"></div></label></div>
+<div class="field"><label>HbA1c % <span class="ref">≤5.5</span><input id="a1c" type="number" step=".1"><div id="s-a1c" class="status"></div></label></div>
+</div></section>
+
+<section class="card"><h2>脂質</h2><div class="grid">
+<div class="field"><label>LDL-C mg/dL <span class="ref">60–119</span><input id="ldl" type="number"><div id="s-ldl" class="status"></div></label></div>
+<div class="field"><label>HDL-C mg/dL <span class="ref">≥40</span><input id="hdl" type="number"><div id="s-hdl" class="status"></div></label></div>
+<div class="field"><label>TG mg/dL <span class="ref">30–149</span><input id="tg" type="number"><div id="s-tg" class="status"></div></label></div>
+<div class="field"><label>non-HDL-C mg/dL <span class="ref">90–149</span><input id="nonhdl" type="number"><div id="s-nonhdl" class="status"></div></label></div>
+</div></section>
+
+<section class="card"><h2>肝機能</h2><div class="grid">
+<div class="field"><label>AST U/L <span class="ref">≤30</span><input id="ast" type="number"><div id="s-ast" class="status"></div></label></div>
+<div class="field"><label>ALT U/L <span class="ref">≤30</span><input id="alt" type="number"><div id="s-alt" class="status"></div></label></div>
+<div class="field"><label>γ-GTP U/L <span class="ref">≤50</span><input id="ggt" type="number"><div id="s-ggt" class="status"></div></label></div>
+</div></section>
+
+<section class="card"><h2>腎機能・尿酸</h2><div class="grid">
+<div class="field"><label>Cr mg/dL<input id="cr" type="number" step=".01"><div id="s-cr" class="status"></div></label></div>
+<div class="field"><label>eGFR mL/min/1.73m² <span class="ref">≥60</span><input id="egfr" type="number" step=".1"><div id="s-egfr" class="status"></div></label></div>
+<div class="field"><label>尿酸 mg/dL <span class="ref">2.1–7.0</span><input id="ua" type="number" step=".1"><div id="s-ua" class="status"></div></label></div>
+</div></section>
+
+<section class="card"><h2>赤血球・血小板</h2><div class="grid">
+<div class="field"><label>Hb g/dL<input id="hb" type="number" step=".1"><div id="s-hb" class="status"></div></label></div>
+<div class="field"><label>Ht %<input id="ht" type="number" step=".1"></label></div>
+<div class="field"><label>MCV fL<input id="mcv" type="number" step=".1"></label></div>
+<div class="field"><label>MCH pg<input id="mch" type="number" step=".1"></label></div>
+<div class="field"><label>MCHC %<input id="mchc" type="number" step=".1"></label></div>
+<div class="field"><label>血小板 PLT ×10⁴/μL <span class="ref">14.5–32.9</span><input id="plt" type="number" step=".1"><div id="s-plt" class="status"></div></label></div>
+</div></section>
+
+<section class="card"><h2>白血球・炎症</h2><div class="grid">
+<div class="field"><label>WBC ×10³/μL <span class="ref">3.1–8.4</span><input id="wbc" type="number" step=".1"><div id="s-wbc" class="status"></div></label></div>
+<div class="field"><label>好中球 NEUT %<input id="neut" type="number" step=".1"></label></div>
+<div class="field"><label>リンパ球 LYMPH %<input id="lymph" type="number" step=".1"></label></div>
+<div class="field"><label>単球 MONO %<input id="mono" type="number" step=".1"></label></div>
+<div class="field"><label>好酸球 EOS %<input id="eos" type="number" step=".1"></label></div>
+<div class="field"><label>好塩基球 BASO %<input id="baso" type="number" step=".1"></label></div>
+<div class="field"><label>CRP mg/dL <span class="ref">≤0.30</span><input id="crp" type="number" step=".01"><div id="s-crp" class="status"></div></label></div>
+</div>
+<p class="small">白血球分画は施設の基準範囲を優先。WBCだけでは原因を特定できません。</p>
+</section>
+
+<section class="card"><h2>尿検査</h2><div class="grid">
+<div class="field"><label>尿蛋白<select id="upro"><option value="0">陰性</option><option value="1">±</option><option value="2">＋以上</option></select></label></div>
+<div class="field"><label>尿糖<select id="uglu"><option value="0">陰性</option><option value="1">±</option><option value="2">＋以上</option></select></label></div>
+</div></section>
+
+
+
+<section class="card">
+<h2>⚙️ 判定基準</h2>
+<div class="grid">
+<div class="field"><label>基準セット
+<select id="refset">
+<option value="dock2026">2026年度 人間ドック参考</option>
+<option value="facility">施設基準を優先（入力値はそのまま確認）</option>
+</select></label></div>
+<div class="field"><label>基準値の表示
+<select id="showref"><option value="yes">表示する</option><option value="no">表示しない</option></select></label></div>
+</div>
+<p class="small">健診施設ごとに基準範囲が異なる場合があります。公開されている2026年度判定区分を参考にしつつ、実際の健診票の基準範囲を優先してください。</p>
+</section>
+
+<section class="card">
+<h2>📷 健診結果をカメラで読み取り</h2>
+<p class="small">健診結果の写真を選択すると、OCRで検査項目と数値を読み取って入力欄へ反映する方式です。現在の試作版ではOCRエンジンを外部CDNから読み込みます。読み取り後は必ず元の健診票と照合してください。</p>
+<input id="ocrImage" type="file" accept="image/*" capture="environment">
+<div id="ocrStatus" class="small"></div>
+<button id="ocrBtn" type="button" style="margin-top:8px;background:#475569" onclick="runOCR()">📷 写真から読み取る</button>
+</section>
+
+<section class="card"><button id="mainAnalyzeBtn" type="button" class="primary" type="button" onclick="analyze()">⚡ 結果を解析する</button></section>
+<section id="out" class="card" style="display:none"></section>
+<p class="small">※本ツールは診断を行うものではなく、健診結果を薬剤師が整理・確認するための参考情報です。実際の健診施設の基準範囲、診療情報、添付文書等を優先してください。</p>
+</main>
+<script>
+const $=id=>document.getElementById(id), v=id=>{let x=parseFloat($(id).value);return Number.isFinite(x)?x:null};
+function stat(id,text,cls){let e=$("s-"+id);if(e){e.textContent=text;e.className="status "+cls}}
+function watch(){
+ let x=v("sbp"); if(x!=null)stat("sbp",x<=129?"基準目安内":"高値傾向",x<=129?"ok":"warn");
+ x=v("dbp"); if(x!=null)stat("dbp",x<=84?"基準目安内":"高値傾向",x<=84?"ok":"warn");
+ x=v("glu"); if(x!=null)stat("glu",x<=99?"基準範囲":"要確認",x<=99?"ok":x>=126?"bad":"warn");
+ x=v("a1c"); if(x!=null)stat("a1c",x<=5.5?"基準範囲":x>=6.5?"要確認":"要注意",x<=5.5?"ok":x>=6.5?"bad":"warn");
+ x=v("ldl"); if(x!=null)stat("ldl",x>=60&&x<=119?"基準範囲":x>=180?"高値":"要注意",x>=60&&x<=119?"ok":x>=180?"bad":"warn");
+ x=v("hdl"); if(x!=null)stat("hdl",x>=40?"基準範囲":x<=29?"低値":"要注意",x>=40?"ok":x<=29?"bad":"warn");
+ x=v("tg"); if(x!=null)stat("tg",x>=30&&x<=149?"基準範囲":x>=500?"高値":"要注意",x>=30&&x<=149?"ok":x>=500?"bad":"warn");
+ x=v("ast"); if(x!=null)stat("ast",x<=30?"基準範囲":x>=51?"高値":"要注意",x<=30?"ok":x>=51?"bad":"warn");
+ x=v("alt"); if(x!=null)stat("alt",x<=30?"基準範囲":x>=51?"高値":"要注意",x<=30?"ok":x>=51?"bad":"warn");
+ x=v("ggt"); if(x!=null)stat("ggt",x<=50?"基準範囲":x>=101?"高値":"要注意",x<=50?"ok":x>=101?"bad":"warn");
+ x=v("egfr"); if(x!=null)stat("egfr",x>=60?"基準目安内":x<45?"低下":"要確認",x>=60?"ok":x<45?"bad":"warn");
+ x=v("ua"); if(x!=null)stat("ua",x>=2.1&&x<=7?"基準範囲":x>=9?"高値":"要注意",x>=2.1&&x<=7?"ok":x>=9?"bad":"warn");
+ x=v("hb"); if(x!=null){let m=$("sex").value==="m";let lo=m?13.1:12.1;let hi=m?16.3:14.5;stat("hb",x>=lo&&x<=hi?"基準範囲":x<lo?"低値":"高値",x>=lo&&x<=hi?"ok":"warn")}
+ x=v("wbc"); if(x!=null)stat("wbc",x>=3.1&&x<=8.4?"基準範囲":x<=3?"低値":x>=10?"高値":"要注意",x>=3.1&&x<=8.4?"ok":x<=3||x>=10?"bad":"warn");
+ x=v("plt"); if(x!=null)stat("plt",x>=14.5&&x<=32.9?"基準範囲":x<=9.9||x>=40?"要確認":"要注意",x>=14.5&&x<=32.9?"ok":x<=9.9||x>=40?"bad":"warn");
+ x=v("crp"); if(x!=null)stat("crp",x<=.3?"基準範囲":x>=1?"高値":"要注意",x<=.3?"ok":x>=1?"bad":"warn");
+}
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",watch));
+
+
+function analyze(){
+  const v = id => parseFloat(document.getElementById(id)?.value);
+  const val = {
+    sb:v('sb'), db:v('db'), g:v('g'), a:v('a'), ld:v('ld'), hd:v('hd'),
+    tg:v('tg'), nh:v('nh'), ast:v('ast'), alt:v('alt'), gg:v('gg'),
+    eg:v('eg'), ua:v('ua'), hb:v('hb'), mcv:v('mcv'), wbc:v('wbc'),
+    crp:v('crp'), plt:v('plt'), eos:v('eos'), h:v('h'), w:v('w')
+  };
+
+  const bmi = Number.isFinite(val.h) && Number.isFinite(val.w) && val.h > 0
+    ? val.w / Math.pow(val.h/100,2) : null;
+
+  const findings = [];
+
+  const add = (key, title, detail, level, score) => {
+    findings.push({key,title,detail,level,score});
+  };
+
+  if (Number.isFinite(val.g)) {
+    if (val.g >= 126) add('glucose','血糖高値の確認',`空腹時血糖 ${val.g} mg/dL`, '最優先', 5);
+    else if (val.g >= 100) add('glucose','血糖値の確認',`空腹時血糖 ${val.g} mg/dL`, '優先', 3);
+  }
+  if (Number.isFinite(val.a)) {
+    if (val.a >= 6.5) add('glucose','HbA1c高値の確認',`HbA1c ${val.a} %`, '最優先', 5);
+    else if (val.a >= 5.6) add('glucose','HbA1cの確認',`HbA1c ${val.a} %`, '優先', 3);
+  }
+
+  if (Number.isFinite(val.sb) && Number.isFinite(val.db)) {
+    if (val.sb >= 160 || val.db >= 100) add('bp','血圧高値の確認',`血圧 ${val.sb}/${val.db} mmHg`, '最優先', 5);
+    else if (val.sb >= 140 || val.db >= 90) add('bp','血圧高値の確認',`血圧 ${val.sb}/${val.db} mmHg`, '優先', 3);
+    else if (val.sb >= 130 || val.db >= 80) add('bp','血圧の確認',`血圧 ${val.sb}/${val.db} mmHg`, '確認', 1);
+  }
+
+  if (Number.isFinite(val.ld)) {
+    if (val.ld >= 180) add('lipid','LDLコレステロール高値',`LDL ${val.ld} mg/dL`, '最優先', 5);
+    else if (val.ld >= 120) add('lipid','LDLコレステロールの確認',`LDL ${val.ld} mg/dL`, '優先', 3);
+    else if (val.ld <= 59) add('lipid_low','LDL低値の確認',`LDL ${val.ld} mg/dL`, '確認', 1);
+  }
+  if (Number.isFinite(val.tg)) {
+    if (val.tg >= 500) add('tg','中性脂肪高値',`TG ${val.tg} mg/dL`, '最優先', 5);
+    else if (val.tg >= 150) add('tg','中性脂肪の確認',`TG ${val.tg} mg/dL`, '優先', 3);
+    else if (val.tg <= 29) add('tg_low','中性脂肪低値の確認',`TG ${val.tg} mg/dL`, '確認', 1);
+  }
+  if (Number.isFinite(val.hd) && val.hd <= 39) add('hdl','HDLコレステロール低値',`HDL ${val.hd} mg/dL`, val.hd <= 29 ? '最優先' : '確認', val.hd <= 29 ? 5 : 1);
+  if (Number.isFinite(val.nh)) {
+    if (val.nh >= 210) add('lipid','non-HDLコレステロール高値',`non-HDL ${val.nh} mg/dL`, '最優先', 5);
+    else if (val.nh >= 150) add('lipid','non-HDLコレステロールの確認',`non-HDL ${val.nh} mg/dL`, '優先', 3);
+  }
+
+  if (Number.isFinite(val.ast) && val.ast >= 31) add('liver','肝機能値の確認',`AST ${val.ast} U/L`, val.ast >= 51 ? '最優先' : '優先', val.ast >= 51 ? 5 : 3);
+  if (Number.isFinite(val.alt) && val.alt >= 31) add('liver','肝機能値の確認',`ALT ${val.alt} U/L`, val.alt >= 51 ? '最優先' : '優先', val.alt >= 51 ? 5 : 3);
+  if (Number.isFinite(val.gg) && val.gg >= 51) add('liver','γ-GTP高値の確認',`γ-GTP ${val.gg} U/L`, val.gg >= 101 ? '最優先' : '優先', val.gg >= 101 ? 5 : 3);
+
+  if (Number.isFinite(val.eg) && val.eg < 60) add('kidney','腎機能の確認',`eGFR ${val.eg} mL/min/1.73m²`, val.eg < 45 ? '最優先' : '優先', val.eg < 45 ? 5 : 3);
+  if (Number.isFinite(val.ua)) {
+    if (val.ua >= 9) add('uric_acid','尿酸高値',`尿酸 ${val.ua} mg/dL`, '最優先', 5);
+    else if (val.ua >= 7.1) add('uric_acid','尿酸の確認',`尿酸 ${val.ua} mg/dL`, '優先', 3);
+  }
+
+  if (Number.isFinite(val.wbc)) {
+    if (val.wbc >= 10.0 || val.wbc <= 3.0) add('wbc','白血球数の確認',`WBC ${val.wbc} ×10³/μL`, '優先', 3);
+    else if (val.wbc >= 8.5) add('wbc','白血球数の確認',`WBC ${val.wbc} ×10³/μL`, '確認', 1);
+  }
+  if (Number.isFinite(val.crp) && val.crp >= 0.31) add('crp','CRPの確認',`CRP ${val.crp} mg/dL`, val.crp >= 1 ? '優先' : '確認', val.crp >= 1 ? 3 : 1);
+  if (Number.isFinite(val.plt) && (val.plt <= 14.4 || val.plt >= 33.0)) add('plt','血小板数の確認',`PLT ${val.plt} ×10⁴/μL`, (val.plt <= 9.9 || val.plt >= 40) ? '最優先' : '優先', (val.plt <= 9.9 || val.plt >= 40) ? 5 : 3);
+
+  if (Number.isFinite(val.hb)) {
+    if (val.hb < 11) add('anemia','ヘモグロビン低値の確認',`Hb ${val.hb} g/dL`, '優先', 3);
+    else if (val.hb < 12) add('anemia','ヘモグロビンの確認',`Hb ${val.hb} g/dL`, '確認', 1);
+  }
+
+  findings.sort((x,y)=>y.score-x.score);
+
+  const advice = {
+    glucose:{
+      food:['甘い飲料・菓子・夜食を減らし、主食量を見直す','野菜・海藻・きのこ・豆類などを先に取り入れる','食後に無理のない範囲で歩くなど、日常活動量を確保'],
+      supplement:['「糖質カット」「血糖対策」をうたう健康食品を自己判断で重ねない','α-リポ酸・クロムなどを使用している場合は、目的・用量・併用薬を確認','糖尿病治療薬やインスリン使用中なら、低血糖につながる可能性も含め確認'],
+      pharmacist:['空腹時血糖とHbA1cの両方、採血条件・既往歴を確認','糖尿病治療薬、インスリン、OTC、健康食品の使用状況を確認']
+    },
+    bp:{
+      food:['汁物・漬物・加工食品・麺類の汁など、塩分が多くなりやすい食品を見直す','外食では汁を残す、味付けを薄めるなど具体的に調整'],
+      supplement:['カリウム含有サプリや塩代替品は、腎機能や併用薬によって注意が必要','甘草（グリチルリチン）を含む健康食品・生薬製品は血圧や電解質への影響に注意'],
+      pharmacist:['降圧薬の服薬状況・NSAIDsなどOTC使用・健康食品を確認','家庭血圧があれば診察室血圧とあわせて確認']
+    },
+    lipid:{
+      food:['脂身の多い肉・揚げ物・加工肉を頻回に食べている場合は量や頻度を調整','魚・大豆製品・野菜・海藻・きのこなどを組み合わせる','LDLだけでなくTGやnon-HDLも合わせて食事全体を確認'],
+      supplement:['「コレステロール対策」サプリは成分を確認してから使用を判断','紅麹・ポリコサノールなどを含む製品は、医薬品との併用や安全性を確認','EPA/DHA製品を使う場合は抗凝固薬・抗血小板薬などとの併用を確認'],
+      pharmacist:['スタチン等の脂質異常症治療薬、OTC、サプリの併用を確認','筋肉痛などの症状や服薬アドヒアランスも確認']
+    },
+    tg:{
+      food:['清涼飲料水・菓子・夜食など糖質の多い食品を見直す','飲酒習慣がある場合は量・頻度を確認','主食・間食・飲料を含めて1日の糖質摂取を見直す'],
+      supplement:['EPA/DHAなどを使用する場合は製品量と併用薬を確認','「脂肪燃焼」「中性脂肪対策」をうたう複合サプリを自己判断で追加しない'],
+      pharmacist:['脂質異常症治療薬、抗凝固薬・抗血小板薬などを確認','採血が空腹時か、直前の飲酒や食事の影響も確認']
+    },
+    hdl:{
+      food:['極端な脂質制限だけに偏らず、魚・大豆製品などを含むバランスのよい食事を意識','体重管理と運動習慣を組み合わせる'],
+      supplement:['HDLを上げることだけを目的にサプリを追加するのは慎重に','複数の脂質対策サプリを重ねず、成分と目的を確認'],
+      pharmacist:['喫煙、運動、体重変化、他の脂質項目を合わせて確認']
+    },
+    liver:{
+      food:['飲酒量が多い場合はまず量・頻度を見直す','揚げ物や高カロリー食品が多い場合は頻度・量を調整','急激な極端な食事制限ではなく、継続可能な食事改善を行う'],
+      supplement:['「肝臓に良い」をうたうサプリ・ハーブを自己判断で追加しない','OTC、漢方、健康食品を含め、摂取開始時期と肝機能値の変化を確認'],
+      pharmacist:['処方薬・OTC・サプリ・飲酒歴を確認','AST/ALT/γ-GTPの組み合わせと過去値も確認']
+    },
+    kidney:{
+      food:['塩分を控え、加工食品や汁物の頻度を見直す','自己判断で極端なタンパク質・カリウム・リン制限を始めない','水分摂取は疾患や医師の指示がある場合はそれを優先'],
+      supplement:['カリウム・マグネシウム・リンなどの高用量サプリを自己判断で追加しない','「腎臓に良い」をうたう健康食品は成分を確認','腎機能に影響する可能性のあるOTCやサプリの使用状況を確認'],
+      pharmacist:['NSAIDsなど腎機能に注意が必要な薬の使用を確認','eGFRだけでなく尿蛋白など他の腎所見も確認']
+    },
+    uric_acid:{
+      food:['ビールなど飲酒量が多い場合は量・頻度を見直す','甘い飲料や体重増加につながる食習慣を調整','水分摂取を意識する（医師から制限がある場合は指示を優先）'],
+      supplement:['高用量ナイアシン製品など、尿酸への影響があり得る製品を確認','尿酸対策サプリを自己判断で追加する前に、使用目的と成分を確認'],
+      pharmacist:['尿酸降下薬、利尿薬、OTC、サプリを確認','痛風発作歴や腎機能なども合わせて確認']
+    },
+    wbc:{
+      food:['数値だけを下げる目的でサプリを追加せず、普段の食事を維持する','発熱・咽頭痛など症状がある場合は食事より受診を優先'],
+      supplement:['「免疫力アップ」などをうたうサプリを自己判断で重ねない','複数製品を併用している場合は成分の重複を確認'],
+      pharmacist:['症状、感染症状況、服薬歴、健康食品の使用状況を確認']
+    },
+    crp:{
+      food:['CRPの数値だけを下げる目的で特定のサプリを追加しない','体調不良や発熱などがあれば食事改善より原因確認を優先'],
+      supplement:['「炎症対策」サプリを自己判断で追加せず、成分と併用薬を確認'],
+      pharmacist:['症状・既往歴・服薬状況と合わせて評価','急な上昇か、過去からの推移かを確認']
+    },
+    plt:{
+      food:['数値だけを理由に鉄などを自己判断で大量摂取しない','出血症状がある場合はサプリより受診を優先'],
+      supplement:['ビタミンEなど高用量製品は、抗凝固薬・抗血小板薬との併用に注意','健康食品を含め、出血に関係する成分の重複を確認'],
+      pharmacist:['抗凝固薬・抗血小板薬、NSAIDs、健康食品を確認','出血・紫斑などの症状を確認']
+    },
+    anemia:{
+      food:['鉄を含む食品（赤身肉、魚、豆類など）をバランスよく取り入れる','食事だけで改善しない場合は原因確認を優先'],
+      supplement:['鉄サプリは不足の原因や検査値を確認してから使用を検討','複数のマルチビタミン・ミネラルで鉄が重複していないか確認'],
+      pharmacist:['HbだけでなくMCV、既往歴、月経・出血など背景を確認','鉄剤やサプリの使用状況を確認']
+    },
+    lipid_low:{
+      food:['極端な食事制限を避け、主食・主菜・副菜をバランスよく摂る'],
+      supplement:['低LDLだけを理由にサプリを追加しない','減量目的の極端な食事制限や複数のサプリ使用がないか確認'],
+      pharmacist:['体重変化、食事量、服薬、既往歴などを確認']
+    },
+    tg_low:{
+      food:['食事量が少なすぎないか、主食・主菜・副菜のバランスを確認'],
+      supplement:['低TGだけを理由にサプリを追加しない'],
+      pharmacist:['急な体重減少や食事量の変化、背景疾患・服薬を確認']
+    }
+  };
+
+  // 複数の異常をまとめた「今回の重点ポイント」
+  const uniqueKeys = [...new Set(findings.map(f=>f.key))];
+  const priorityKeys = uniqueKeys.filter(k=>['glucose','bp','lipid','tg','liver','kidney','uric_acid'].includes(k));
+
+  let html = '';
+  html += `<div class="result-head"><div><div class="eyebrow">ASSESSMENT RESULT</div><h2>優先順位付き解析結果</h2></div><div class="result-count">${findings.length}件</div></div>`;
+
+  if (findings.length === 0) {
+    html += `<div class="result-ok"><strong>今回の入力では、設定した判定基準上の大きな注意所見はありません。</strong><p>施設の基準値・問診内容・過去値もあわせて確認してください。</p></div>`;
+  } else {
+    if (priorityKeys.length) {
+      const combined = [];
+      if (uniqueKeys.includes('glucose')) combined.push('糖質の摂り方・間食・食後活動');
+      if (uniqueKeys.includes('lipid') || uniqueKeys.includes('tg') || uniqueKeys.includes('hdl')) combined.push('脂質・飲酒・体重管理');
+      if (uniqueKeys.includes('bp')) combined.push('塩分・加工食品・家庭血圧');
+      if (uniqueKeys.includes('kidney')) combined.push('腎機能と薬剤・サプリの確認');
+      html += `<div class="focus-box"><div class="focus-title">今回の重点ポイント</div><div class="focus-text">${combined.join(' ／ ')}</div><div class="focus-note">複数項目が重なっている場合は、個別の対策を増やすより、共通する生活習慣から整理すると実行しやすくなります。</div></div>`;
+    }
+
+    findings.forEach((f, idx)=>{
+      const a = advice[f.key] || {
+        food:['普段の食事・生活習慣を確認し、極端な制限は避ける'],
+        supplement:['サプリ・健康食品を自己判断で追加せず、成分と併用薬を確認'],
+        pharmacist:['施設の基準値、過去値、問診、服薬状況を合わせて確認']
+      };
+      const tagClass = f.level === '最優先' ? 'p-high' : f.level === '優先' ? 'p-mid' : 'p-low';
+
+      html += `
+      <section class="finding-card">
+        <div class="finding-top">
+          <span class="rank">${idx+1}</span>
+          <div class="finding-main">
+            <div class="finding-title">${f.title}</div>
+            <div class="finding-detail">${f.detail}</div>
+          </div>
+          <span class="priority ${tagClass}">${f.level}</span>
+        </div>
+        <div class="linked-advice">
+          <div class="advice-col">
+            <div class="advice-label">🍚 食事の提案</div>
+            <ul>${a.food.map(x=>`<li>${x}</li>`).join('')}</ul>
+          </div>
+          <div class="advice-col">
+            <div class="advice-label">💊 サプリ・健康食品</div>
+            <ul>${a.supplement.map(x=>`<li>${x}</li>`).join('')}</ul>
+          </div>
+          <div class="advice-col">
+            <div class="advice-label">👨‍⚕️ 薬剤師の確認</div>
+            <ul>${a.pharmacist.map(x=>`<li>${x}</li>`).join('')}</ul>
+          </div>
+        </div>
+      </section>`;
+    });
+
+    html += `<div class="safety-note"><strong>サプリメントについて</strong><br>この画面では、検査値だけからサプリメントの服用を一律に推奨するのではなく、「確認が必要な成分・併用薬」を中心に表示しています。製品名・成分・含有量・服用頻度を確認し、必要に応じて医師・薬剤師へ相談してください。</div>`;
+  }
+
+  if (bmi !== null) {
+    html += `<div class="bmi-note">BMI：${bmi.toFixed(1)}　※身長・体重からの参考値</div>`;
+  }
+
+  const out = document.getElementById('out');
+  if (out) {
+    out.innerHTML = html;
+    out.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+async function runOCR(){
+ const file=$("ocrImage").files[0];
+ const msg=$("ocrStatus");
+ if(!file){msg.textContent="先に健診結果の写真を選択してください。";return;}
+ msg.textContent="画像を読み取り中…（初回はOCRエンジンの読み込みに時間がかかります）";
+ try{
+   if(!window.Tesseract){
+     await new Promise((resolve,reject)=>{
+       const sc=document.createElement("script");
+       sc.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+       sc.onload=resolve; sc.onerror=reject; document.head.appendChild(sc);
+     });
+   }
+   const result=await Tesseract.recognize(file,"jpn+eng",{logger:m=>{
+     if(m.status)msg.textContent=`OCR：${m.status} ${m.progress?Math.round(m.progress*100)+"%":""}`;
+   }});
+   const text=result.data.text;
+   const patterns=[
+    ["sbp",/(?:収縮期血圧|最高血圧|上の血圧|SYS)\D{0,8}(\d{2,3})/i],
+    ["dbp",/(?:拡張期血圧|最低血圧|下の血圧|DIA)\D{0,8}(\d{2,3})/i],
+    ["glu",/(?:空腹時血糖|空腹時血糖値|血糖|FPG|GLU)\D{0,10}(\d{2,3}(?:\.\d)?)/i],
+    ["a1c",/(?:HbA1c|HbA1c\(NGSP\))\D{0,10}(\d{1,2}(?:\.\d)?)/i],
+    ["ldl",/(?:LDL(?:-C)?|LDLコレステロール)\D{0,10}(\d{2,3})/i],
+    ["hdl",/(?:HDL(?:-C)?|HDLコレステロール)\D{0,10}(\d{2,3})/i],
+    ["tg",/(?:中性脂肪|トリグリセライド|TG)\D{0,10}(\d{2,4})/i],
+    ["ast",/(?:AST|GOT)\D{0,10}(\d{1,3})/i],
+    ["alt",/(?:ALT|GPT)\D{0,10}(\d{1,3})/i],
+    ["ggt",/(?:γ[-‐ー]?GTP|γGTP|GGT)\D{0,10}(\d{1,3})/i],
+    ["egfr",/(?:eGFR|GFR)\D{0,10}(\d{1,3}(?:\.\d)?)/i],
+    ["ua",/(?:尿酸|UA)\D{0,10}(\d{1,2}(?:\.\d)?)/i],
+    ["hb",/(?:ヘモグロビン|血色素量|Hb)\D{0,10}(\d{1,2}(?:\.\d)?)/i],
+    ["wbc",/(?:白血球数|白血球|WBC)\D{0,10}(\d{1,2}(?:\.\d)?)/i],
+    ["plt",/(?:血小板数|血小板|PLT)\D{0,10}(\d{1,2}(?:\.\d)?)/i],
+    ["crp",/(?:CRP|C反応性蛋白)\D{0,10}(\d+(?:\.\d+)?)/i]
+   ];
+   let count=0;
+   for(const [id,re] of patterns){
+     const m=text.match(re);
+     if(m){$(id).value=m[1];count++;}
+   }
+   watch();
+   msg.textContent=`${count}項目を候補として反映しました。写真の文字認識には誤りがあり得るため、必ず健診票と照合してください。`;
+ }catch(e){
+   console.error(e); msg.textContent="OCRに失敗しました。明るく、正面から撮影した写真でもう一度試してください。";
+ }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+ const rs=$("refset");
+ if(rs)rs.addEventListener("change",()=>{
+   const msg=$("ocrStatus");
+   if(msg)msg.textContent=rs.value==="facility"?"施設基準優先モード：この試作版では数値の入力・表示を優先し、判定閾値は自動変更しません。":"2026年度参考モード：公開判定区分を参考にしています。";
+ });
+});
+
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{const top=document.getElementById('appTop');if(top){const c=document.createElement('div');c.textContent='BETA  •  PHARMACIST TOOL';c.style.cssText='position:absolute;right:18px;top:18px;font-size:9px;font-weight:900;letter-spacing:.08em;padding:6px 9px;border:1px solid rgba(255,255,255,.2);border-radius:99px;background:rgba(255,255,255,.09);color:#dff9ff';top.appendChild(c)}})
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const btn=document.getElementById('mainAnalyzeBtn');
+  if(btn){
+    btn.addEventListener('click',(ev)=>{
+      ev.preventDefault();
+      try{
+        if(typeof window.analyze==='function') window.analyze();
+        else if(typeof analyze==='function') analyze();
+        else throw new Error('解析処理が読み込まれていません');
+      }catch(err){
+        console.error(err);
+        const out=document.getElementById('out');
+        if(out){
+          out.style.display='block';
+          out.innerHTML='<h2>解析処理でエラーが発生しました</h2><p class="small">入力値を確認して、もう一度お試しください。</p><p class="small">エラー：'+String(err.message||err)+'</p>';
+          out.scrollIntoView({behavior:'smooth'});
+        }
+      }
+    });
+  }
+  // Make the fixed bottom button call the same reliable handler.
+  document.querySelectorAll('.sticky-actions button').forEach(b=>{
+    b.onclick=()=>btn?.click();
+  });
+});
+</script>
+
+<script>
+(function(){
+  function runAssessment(e){
+    const b=e.target.closest('#mainAnalyzeBtn,.sticky-actions button');
+    if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    const fn=window.analyze;
+    if(typeof fn!=='function'){
+      const out=document.getElementById('out');
+      if(out){out.style.display='block';out.innerHTML='<h2>解析機能を読み込めませんでした</h2><p class="small">ページを一度閉じて、もう一度開いてください。</p>';out.scrollIntoView({behavior:'smooth'});}
+      return;
+    }
+    try{ fn(); }
+    catch(err){
+      console.error(err);
+      const out=document.getElementById('out');
+      if(out){
+        out.style.display='block';
+        out.innerHTML='<h2>入力内容を確認してください</h2><p class="small">解析中にエラーが発生しました。入力欄の数値を確認して再度お試しください。</p>';
+        out.scrollIntoView({behavior:'smooth'});
+      }
+    }
+  }
+
+})();
+</script>
+</body></html>
